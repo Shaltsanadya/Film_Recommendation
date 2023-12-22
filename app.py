@@ -1,38 +1,52 @@
-dataframe = None
+import streamlit as st
+import pickle
+import pandas as pd
+import sys
+sys.path.insert(1, "C:/past/your/coppied/path/here/streamlit_option_menu")
+from streamlit_option_menu import option_menu
 
-st.title("""
-Netflix Recommendation System
-This is an Content Based Recommender System made on implicit ratings :smile:.
- """)
+st.set_page_config(page_title='Movie Recommender System', page_icon=':clapper:', layout='wide', initial_sidebar_state='auto')
 
-st.text("")
-st.text("")
-st.text("")
-st.text("")
+st.markdown("<h1 style='text-align: center; color: black;'>Movie Recommender System</h1>", unsafe_allow_html=True)
 
-session.options = st.multiselect(label="Select Movies", options=movies)
+selected_movie_name= option_menu(None, ['A Movie Recommendation System using NLP'],
+icons = ['film'],  menu_icon = 'cast', orientation= 'horizontal',default_index = 0)
 
-st.text("")
-st.text("")
+df = pd.read_csv('imdb_movies.csv')
+# Recommend movies based on content
+def recommend(movie):
+    movie_index = df[df['names'] == movie].index[0]
+    distances = similarity[movie_index]
+    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:22]
 
-session.slider_count = st.slider(label="movie_count", min_value=5, max_value=50)
+    recommended_movies = []
+    for i in movies_list:
+        recommended_movies.append(df.iloc[i[0]].names)
 
-st.text("")
-st.text("")
+    return recommended_movies
 
-buffer1, col1, buffer2 = st.columns([1.45, 1, 1])
+def score_movie(movie):
+    movie_index = df[df['names'] == movie].index[0]
+    distances = similarity[movie_index]
+    movies_list = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:22]
+    score=[]
+    for i in movies_list:
+        score.append(df.iloc[i[0]].score)
+    return score
 
-is_clicked = col1.button(label="Recommend")
+movies_dict = pickle.load(open('movie_dict.pkl','rb'))
+movies = pd.DataFrame(movies_dict)
 
-if is_clicked:
-    dataframe = recommend_table(session.options, movie_count=session.slider_count, tfidf_data=tfidf)
-
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-
-if dataframe is not None:
-    st.table(dataframe)
-@Shaltsanadya
-Comment
+similarity = pickle.load(open('similarity.pkl','rb'))
+selected_movie_name = st.selectbox('Select a movie to recommend', df['names'].values)
+movie_count = st.slider(label="The number of films", min_value=5, max_value=20)
+if st.button('Recommend'):
+    st.markdown("<h3 style='text-align: left; color: black;'>Recomended Film</h3>", unsafe_allow_html=True)
+    recommendations = recommend(selected_movie_name)
+    scores= score_movie(selected_movie_name)
+    for i in range(min(movie_count,len(recommendations))):
+        col1,col2= st.columns(2)
+        with col1:
+            st.write(recommendations[i])
+        with col2:
+            st.write(f"score: **{scores[i]}**")

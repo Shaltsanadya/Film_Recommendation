@@ -19,7 +19,7 @@ How to Use:
 3. **Run the Application:**
 `streamlit run app.py`
 4. **Explore Recommendations:**
-</br>Open your web browser and navigate to `movie.streamlit.app` to start exploring movie recommendations!
+</br>Open your web browser and navigate to (https://imdbmovies.streamlit.app/) to start exploring movie recommendations!
 
 ![image](https://github.com/Shaltsanadya/Film_Recommendation/assets/89865857/f740aa02-e37e-4d73-9e04-98d748ad3874)
 

@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import sys
-sys.path.insert(1, "C:/past/your/coppied/path/here/streamlit_option_menu")
+#sys.path.insert(1, "C:/past/your/coppied/path/here/streamlit_option_menu")
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title='Movie Recommender System', page_icon=':clapper:', layout='wide', initial_sidebar_state='auto')
